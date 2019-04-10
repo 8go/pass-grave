@@ -1,0 +1,23 @@
+PASSWORD_STORE_EXTENSION_COMMANDS+=(grave)
+
+__password_store_extension_complete_grave() {
+  if [[ $COMP_CWORD -gt 2 ]]; then
+    case "${COMP_WORDS[2]}" in
+    help|--help|-h)
+      _pass_complete_entries
+      ;;
+    version|--version|-v)
+      _pass_complete_entries
+      ;;
+    open)
+      _pass_complete_entries
+      ;;
+    close)
+      _pass_complete_entries
+      ;;
+    esac
+  else
+      COMPREPLY+=($(compgen -W " open close help version -h --help -v --version" -- ${cur}))
+      _pass_complete_entries 1
+  fi
+}
