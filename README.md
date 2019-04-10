@@ -29,7 +29,7 @@ Why a "grave"?
       and the very step is to close the grave.
 
 Usage:
-    $PROGRAM grave open
+    pass grave open
         On the first run it creates a directory ".grave" in \$PASSWORD_STORE_DIR.
         By default this is ~/.password-store/.grave".
         If the grave directory with a grave exists it will open it and
@@ -39,38 +39,16 @@ Usage:
         The grave is encrypted with the pass GPG key and hence
         the content of the grave and all its meta-data is protected and
         hidden.
-    $PROGRAM grave close
+    pass grave close
         If the grave does not exist, "close" creates a copy of the complete password
         store by creating a compressed tar-file with extension .tar.bz2 and
         encrypts it with the pass GPG key.
         Thereafter the password store is removed leaving only the grave file
         and other files that hold no meta-data (e.g. extensions, backups, gpg-id).
-    $PROGRAM grave help
+    pass grave help
         Prints this help message.
-    $PROGRAM grave version
+    pass grave version
         Prints the version number.
-
-Example: $PROGRAM grave open
-            this opens the grave at the beginning of a session
-            and restores the password store from the grave file and then
-            removes the grave file.
-Example: $PROGRAM grave close
-            this creates a copy of the password store and places it into
-            a single compressed and encrypted file. Thereafter it removes
-            the password store (except some files holding no meta-data)
-
-For installation place this bash script file "grave.bash" into
-the passwordstore extension directory specified with \$PASSWORD_STORE_EXTENSIONS_DIR.
-By default this is ~/.password-store/.extensions.
-E.g. cp grave.bash ~/.password-store/.extensions
-Give the file execution permissions:
-E.g. chmod 700 ~/.password-store/.extensions/grave.bash
-Set the variable PASSWORD_STORE_ENABLE_EXTENSIONS to true to enable extensions.
-E.g. export PASSWORD_STORE_ENABLE_EXTENSIONS=true
-Source the bash completion file "pass-grave.bash.completion" for bash completion.
-E.g. source ~/.password-store/.bash-completions/pass-grave.bash.completion
-Type "pass grave close" to create your first grave.
-E.g. pass grave close
 ```
 
 ## Examples
@@ -79,15 +57,19 @@ E.g. pass grave close
 ```
 $ pass grave open
 ```
-This extracts and restores the password store from the grave and then deletes the grave.
+This opens the grave at the beginning of a session, 
+extracts and restores the password store from the grave file 
+and then removes the grave file.
 
 ## Example 2: Closing the grave
 ```
 $ pass grave close
 ```
 This creates the grave, places the complete password store into it 
-and then removes the password store with its meta-data. All meta-data
+and then removes the password store with its meta-data 
+(except some files holding no meta-data). All meta-data
 is hiden now.
+The grave file is a single compressed and GPG encrypted file.             
 The grave can be found at ```$PASSWORD_STORE_DIR/.grave```
 e.g. ```~/.password-store/.grave/passwordstore.grave.tar.gz2.gpg```.
             
