@@ -57,7 +57,7 @@ Usage:
 
 ## Examples
 
-## Example 1: Opening the grave
+### Example 1: Opening the grave
 ```
 $ pass grave open
 ```
@@ -65,7 +65,7 @@ This opens the grave at the beginning of a session,
 extracts and restores the password store from the grave file 
 and then removes the grave file.
 
-## Example 2: Closing the grave
+### Example 2: Closing the grave
 ```
 $ pass grave close
 ```
@@ -77,7 +77,7 @@ The grave file is a single compressed and GPG encrypted file.
 The grave can be found at ```$PASSWORD_STORE_DIR/.grave```
 e.g. ```~/.password-store/.grave/passwordstore.grave.tar.gz2.gpg```.
             
-## Installaion
+## Installation
 
 For installation download and place this bash script file ```grave.bash``` into
 the passwordstore extension directory specified with ```$PASSWORD_STORE_EXTENSIONS_DIR```.
