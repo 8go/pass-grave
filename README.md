@@ -1,10 +1,10 @@
 # pass-grave
 An extension for [pass](https://www.passwordstore.org/) (the standard Unix password manager) to easily hide the metadata of the password store
 
-## Usage
+## Motivation
 
-```
 Why a "grave"?
+```
       pass by default shows meta-data in the password store. Someone with access
       to your computer might find ~/.password-store/email/google/johndoe@gmail.com
       and conclude you have an account with Google and the account name is
@@ -27,7 +27,11 @@ Why a "grave"?
 
       So, typically the first operation of a pass session is to open the grave
       and the very step is to close the grave.
+```
 
+## Usage
+
+```
 Usage:
     pass grave open
         On the first run it creates a directory ".grave" in \$PASSWORD_STORE_DIR.
