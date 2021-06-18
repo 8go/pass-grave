@@ -125,7 +125,7 @@ cmd_grave_open() {
   $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" | tar xj || die "Could not decrypt or untar grave $PASSWORD_STORE_GRAVE_PATH. Aborting."
   rm -f "$PASSWORD_STORE_GRAVE_PATH" || die "Could not remove grave $PASSWORD_STORE_GRAVE_PATH. Please remove manually. Aborting."
   echo "Recreated password store from grave file \"${PASSWORD_STORE_GRAVE_PATH}\" successfully."
-  echo "You can now oerate on your password store normally. Use \"grave close\" at the end of session to hide meta-data."
+  echo "You can now operate on your password store normally. Use \"grave close\" at the end of session to hide meta-data."
   popd >/dev/null || die "Could not change directory. Aborting."
 }
 
