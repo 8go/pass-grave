@@ -25,7 +25,6 @@ install:
 uninstall:
 	rm -vrf \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash" \
-		"$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1" \
 		"$(DESTDIR)$(BASHCOMPDIR)/pass-grave"
 
 lint:
