@@ -19,7 +19,7 @@ install:
 	install -d "$(DESTDIR)$(BASHCOMPDIR)/"
 	install -m 644 pass-grave.bash.completion  "$(DESTDIR)$(BASHCOMPDIR)/pass-grave"
 	@echo
-	@echo "pass-$(PROG) is installed succesfully"
+	@echo "pass-$(PROG) is installed successfully"
 	@echo
 
 uninstall:
