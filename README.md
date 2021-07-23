@@ -102,6 +102,9 @@ Type ```pass grave close``` to create your first grave.
 $ pass grave close
 ```
 
+PS: The `Makefile` provided by @celenium can help you in the installation. Type `make install`.
+
+
 ## Idea came from
 
 - `pass-tomb` from [https://github.com/roddhjav/pass-tomb#readme](https://github.com/roddhjav/pass-tomb#readme)
@@ -114,4 +117,9 @@ $ pass grave close
 
 ## Notes
 
-Both files are tiny: 200 lines (script) and 23 lines (autocompletion)  respectively. You can check them yourself quickly. No need to trust anyone.
+Both files are tiny: 200 lines (script) and 23 lines (autocompletion) respectively. You can check them yourself quickly. No need to trust anyone.
+
+## Contributions
+
+- Contributions and PRs are welcome. :heart:
+- A big shoutout to the contributors so far: @celenium, @Inesgor, and @moppman. :clap:
