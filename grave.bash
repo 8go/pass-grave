@@ -20,7 +20,7 @@ VERSION="1.1.1"
 PASSWORD_STORE_GRAVE_DEBUG=false                    # true or false, prints debugging messages
 PASSWORD_STORE_GRAVE_DIR=".grave"                   # default directory is $PASSWORD_STORE_GRAVE_DIR; $PASSWORD_STORE_DIR/$PASSWORD_STORE_GRAVE_DIR
 PASSWORD_STORE_GRAVE_BASENAME="passwordstore.grave" # grave will become passwordstore.grave.tar.gz2.gpg
-TAR=$(which tar)
+TAR=$(command -v tar)
 
 cmd_grave_usage() {
   cat <<-_EOF
