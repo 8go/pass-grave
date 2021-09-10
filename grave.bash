@@ -151,7 +151,7 @@ cmd_grave_close() {
   chmod 400 "${PASSWORD_STORE_GRAVE_PATH}" >/dev/null || die "Could not change permissions to read-only on file $PASSWORD_STORE_GRAVE_PATH. Aborting."
   BZ2SIZE=$(wc -c <"${PASSWORD_STORE_GRAVE_PATH}") # returns size in bytes
   echo "Created grave file \"${PASSWORD_STORE_GRAVE_PATH}\" of size ${BZ2SIZE} bytes."
-  find . ! -name '.gpg-id' ! -name '.' ! -name '..' ! -path './.grave' ! -path './.grave/*' ! -path './.extensions' ! -path './.extensions/*' ! -path './.backups' ! -path './.backups/*' ! -path './.bash-completions' ! -path './.bash-completions/*' -exec rm -rf {} + || die "Removing password store after having created grave failed. Aborting."
+  find . ! -name '.gpg-id' ! -name '.' ! -name '..' ! -path './.grave' ! -path './.grave/*' ! -path './.extensions' ! -path './.extensions/*' ! -path './.backups' ! -path './.backups/*' ! -path './.bash-completions' ! -path './.bash-completions/*' -delete || die "Removing password store after having created grave failed. Aborting."
   popd >/dev/null || die "Could not change directory. Aborting."
 }
 
