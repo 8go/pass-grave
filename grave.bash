@@ -18,7 +18,7 @@
 
 VERSION="1.1.1"
 PASSWORD_STORE_GRAVE_DEBUG=false                    # true or false, prints debugging messages
-PASSWORD_STORE_GRAVE_DIR=".grave"                   # default directory is $PASSWORD_STORE_GRAVE_DIR; $PASSWORD_STORE_DIR/$PASSWORD_STORE_GRAVE_DIR
+PASSWORD_STORE_GRAVE_DIR=".grave"                   # default directory is $PASSWORD_STORE_GRAVE_DIR; $PREFIX/$PASSWORD_STORE_GRAVE_DIR
 PASSWORD_STORE_GRAVE_BASENAME="passwordstore.grave" # grave will become passwordstore.grave.tar.gz2.gpg
 TAR=$(command -v tar)
 
@@ -50,7 +50,7 @@ Why a "grave"?
 
 Usage:
     $PROGRAM grave open
-        On the first run it creates a directory ".grave" in \$PASSWORD_STORE_DIR.
+        On the first run it creates a directory ".grave" in \$PREFIX.
         By default this is ~/.password-store/.grave".
         If the grave directory with a grave exists it will open it and
         restore the full password store. Once restored the grave will be removed.
@@ -104,12 +104,9 @@ cmd_grave_open() {
   PASSWORD_STORE_GRAVE_PATH="$PASSWORD_STORE_GRAVE_DIR/${PASSWORD_STORE_GRAVE_BASENAME}.tar.bz2.gpg" # path includes filename
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave directory to $PASSWORD_STORE_GRAVE_DIR"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave file to $PASSWORD_STORE_GRAVE_PATH"
+  $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PREFIX"
 
-  if [ -z "$PASSWORD_STORE_DIR" ]; then # var is empty
-    PASSWORD_STORE_DIR="${HOME}/.password-store"
-  fi
-  $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PASSWORD_STORE_DIR"
-  pushd "${PASSWORD_STORE_DIR}" >/dev/null || die "Could not cd into directory $PASSWORD_STORE_DIR. Aborting."
+  pushd "$PREFIX" >/dev/null || die "Could not cd into directory $PREFIX. Aborting."
 
   # does the grave already exist?
   [[ ! -f "$PASSWORD_STORE_GRAVE_PATH" ]] && {
@@ -133,12 +130,9 @@ cmd_grave_close() {
   PASSWORD_STORE_GRAVE_PATH="$PASSWORD_STORE_GRAVE_DIR/${PASSWORD_STORE_GRAVE_BASENAME}.tar.bz2.gpg" # path includes filename
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave directory to $PASSWORD_STORE_GRAVE_DIR"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave file to $PASSWORD_STORE_GRAVE_PATH"
+  $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PREFIX"
 
-  if [ -z "$PASSWORD_STORE_DIR" ]; then # var is empty
-    PASSWORD_STORE_DIR="${HOME}/.password-store"
-  fi
-  $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PASSWORD_STORE_DIR"
-  pushd "${PASSWORD_STORE_DIR}" >/dev/null || die "Could not cd into directory $PASSWORD_STORE_DIR. Aborting."
+  pushd "$PREFIX" >/dev/null || die "Could not cd into directory $PREFIX. Aborting."
 
   # does the grave already exist?
   [[ -f "$PASSWORD_STORE_GRAVE_PATH" ]] && {
@@ -151,7 +145,7 @@ cmd_grave_close() {
   }
 
   mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" >/dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
-  set_gpg_recipients "$(dirname "$PASSWORD_STORE_DIR")"
+  set_gpg_recipients "$(dirname "$PREFIX")"
   $PASSWORD_STORE_GRAVE_DEBUG && echo tar --exclude ".gpg-id" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cj . \| $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}"
   tar --exclude ".gpg-id" --exclude=".grave" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cj . | $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}" || die "Creating encrypted grave failed. Aborting." # add v for debugging if need be
   chmod 400 "${PASSWORD_STORE_GRAVE_PATH}" >/dev/null || die "Could not change permissions to read-only on file $PASSWORD_STORE_GRAVE_PATH. Aborting."
