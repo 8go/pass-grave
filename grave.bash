@@ -146,12 +146,12 @@ cmd_grave_close() {
 
   mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" >/dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
   set_gpg_recipients "$(dirname "$PREFIX")"
-  $PASSWORD_STORE_GRAVE_DEBUG && echo tar --exclude ".gpg-id" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cz . \| $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}"
-  tar --exclude ".gpg-id" --exclude=".grave" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cz . | $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}" || die "Creating encrypted grave failed. Aborting." # add v for debugging if need be
+  $PASSWORD_STORE_GRAVE_DEBUG && echo tar --exclude ".gpg-id" --exclude=".extensions" --exclude=".backups" -cz . \| $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}"
+  tar --exclude ".gpg-id" --exclude=".grave" --exclude=".extensions" --exclude=".backups" -cz . | $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}" || die "Creating encrypted grave failed. Aborting." # add v for debugging if need be
   chmod 400 "${PASSWORD_STORE_GRAVE_PATH}" >/dev/null || die "Could not change permissions to read-only on file $PASSWORD_STORE_GRAVE_PATH. Aborting."
   GZSIZE=$(wc -c <"${PASSWORD_STORE_GRAVE_PATH}") # returns size in bytes
   echo "Created grave file \"${PASSWORD_STORE_GRAVE_PATH}\" of size ${GZSIZE} bytes."
-  find . ! -name '.gpg-id' ! -name '.' ! -name '..' ! -path './.grave' ! -path './.grave/*' ! -path './.extensions' ! -path './.extensions/*' ! -path './.backups' ! -path './.backups/*' ! -path './.bash-completions' ! -path './.bash-completions/*' -delete || die "Removing password store after having created grave failed. Aborting."
+  find . ! -name '.gpg-id' ! -name '.' ! -name '..' ! -path './.grave' ! -path './.grave/*' ! -path './.extensions' ! -path './.extensions/*' ! -path './.backups' ! -path './.backups/*' -delete || die "Removing password store after having created grave failed. Aborting."
   popd >/dev/null || die "Could not change directory. Aborting."
 }
 
