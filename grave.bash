@@ -101,7 +101,7 @@ cmd_grave_version() {
 }
 
 cmd_grave_open() {
-  PASSWORD_STORE_GRAVE_PATH="$PASSWORD_STORE_GRAVE_DIR/${PASSWORD_STORE_GRAVE_BASENAME}.tar.bz2.gpg" # path includes filename
+  PASSWORD_STORE_GRAVE_PATH="$PASSWORD_STORE_GRAVE_DIR/${PASSWORD_STORE_GRAVE_BASENAME}.tar.gz.gpg" # path includes filename
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave directory to $PASSWORD_STORE_GRAVE_DIR"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave file to $PASSWORD_STORE_GRAVE_PATH"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PREFIX"
@@ -118,8 +118,8 @@ cmd_grave_open() {
 
   # file does exist
   mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" >/dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
-  $PASSWORD_STORE_GRAVE_DEBUG && echo $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" \| tar xj
-  $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" | tar xj || die "Could not decrypt or untar grave $PASSWORD_STORE_GRAVE_PATH. Aborting."
+  $PASSWORD_STORE_GRAVE_DEBUG && echo $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" \| tar xz
+  $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" | tar xz || die "Could not decrypt or untar grave $PASSWORD_STORE_GRAVE_PATH. Aborting."
   rm -f "$PASSWORD_STORE_GRAVE_PATH" || die "Could not remove grave $PASSWORD_STORE_GRAVE_PATH. Please remove manually. Aborting."
   echo "Recreated password store from grave file \"${PASSWORD_STORE_GRAVE_PATH}\" successfully."
   echo "You can now operate on your password store normally. Use \"grave close\" at the end of session to hide meta-data."
@@ -127,7 +127,7 @@ cmd_grave_open() {
 }
 
 cmd_grave_close() {
-  PASSWORD_STORE_GRAVE_PATH="$PASSWORD_STORE_GRAVE_DIR/${PASSWORD_STORE_GRAVE_BASENAME}.tar.bz2.gpg" # path includes filename
+  PASSWORD_STORE_GRAVE_PATH="$PASSWORD_STORE_GRAVE_DIR/${PASSWORD_STORE_GRAVE_BASENAME}.tar.gz.gpg" # path includes filename
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave directory to $PASSWORD_STORE_GRAVE_DIR"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave file to $PASSWORD_STORE_GRAVE_PATH"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PREFIX"
@@ -146,11 +146,11 @@ cmd_grave_close() {
 
   mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" >/dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
   set_gpg_recipients "$(dirname "$PREFIX")"
-  $PASSWORD_STORE_GRAVE_DEBUG && echo tar --exclude ".gpg-id" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cj . \| $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}"
-  tar --exclude ".gpg-id" --exclude=".grave" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cj . | $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}" || die "Creating encrypted grave failed. Aborting." # add v for debugging if need be
+  $PASSWORD_STORE_GRAVE_DEBUG && echo tar --exclude ".gpg-id" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cz . \| $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}"
+  tar --exclude ".gpg-id" --exclude=".grave" --exclude=".extensions" --exclude=".backups" --exclude=".bash-completions" -cz . | $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}" || die "Creating encrypted grave failed. Aborting." # add v for debugging if need be
   chmod 400 "${PASSWORD_STORE_GRAVE_PATH}" >/dev/null || die "Could not change permissions to read-only on file $PASSWORD_STORE_GRAVE_PATH. Aborting."
-  BZ2SIZE=$(wc -c <"${PASSWORD_STORE_GRAVE_PATH}") # returns size in bytes
-  echo "Created grave file \"${PASSWORD_STORE_GRAVE_PATH}\" of size ${BZ2SIZE} bytes."
+  GZSIZE=$(wc -c <"${PASSWORD_STORE_GRAVE_PATH}") # returns size in bytes
+  echo "Created grave file \"${PASSWORD_STORE_GRAVE_PATH}\" of size ${GZSIZE} bytes."
   find . ! -name '.gpg-id' ! -name '.' ! -name '..' ! -path './.grave' ! -path './.grave/*' ! -path './.extensions' ! -path './.extensions/*' ! -path './.backups' ! -path './.backups/*' ! -path './.bash-completions' ! -path './.bash-completions/*' -delete || die "Removing password store after having created grave failed. Aborting."
   popd >/dev/null || die "Could not change directory. Aborting."
 }
