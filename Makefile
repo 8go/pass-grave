@@ -1,23 +1,20 @@
 PROG ?= grave
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 DESTDIR ?=
 LIBDIR ?= $(PREFIX)/lib
 SYSTEM_EXTENSION_DIR ?= $(LIBDIR)/password-store/extensions
-BASHCOMPDIR ?= /etc/bash_completion.d
+BASHCOMPDIR ?= $(PREFIX)/share/bash-completion/completions
 
 all:
 	@echo "pass-$(PROG) is a shell script and does not need compilation, it can be simply executed."
 	@echo ""
 	@echo "To install it try \"make install\" instead."
 	@echo
-	@echo "To run pass $(PROG) one needs to have some tools installed on the system:"
-	@echo "     password store"
+	@echo "To run pass $(PROG), you need to have password-store, tar, and gzip installed on your system"
 
 install:
-	install -d "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/"
-	install -m0755 $(PROG).bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash"
-	install -d "$(DESTDIR)$(BASHCOMPDIR)/"
-	install -m 644 pass-grave.bash.completion  "$(DESTDIR)$(BASHCOMPDIR)/pass-grave"
+	@install -Dm0755 $(PROG).bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash"
+	@install -Dm0644 pass-$(PROG).bash.completion "$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)"
 	@echo
 	@echo "pass-$(PROG) is installed successfully"
 	@echo
@@ -25,7 +22,7 @@ install:
 uninstall:
 	rm -vrf \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash" \
-		"$(DESTDIR)$(BASHCOMPDIR)/pass-grave"
+		"$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)"
 
 lint:
 	shellcheck -s bash $(PROG).bash
@@ -35,4 +32,3 @@ test:
 	$(MAKE) -C test
 
 .PHONY: install uninstall lint test
-
