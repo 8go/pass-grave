@@ -1,7 +1,9 @@
 # pass-grave
 
 An extension for [pass](https://www.passwordstore.org/) (the standard Unix password manager) to
-easily hide the metadata of the password store
+easily hide the metadata of the password store.
+
+[![asciicast](https://asciinema.org/a/435080.svg)](https://asciinema.org/a/435080?autoplay=1)
 
 ## Why should I use pass-grave?
 
