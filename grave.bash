@@ -25,7 +25,7 @@ TAR=$(command -v tar)
 cmd_grave_usage() {
   cat <<- _EOF
 Why should I use pass-grave?
-      pass, by default, shows meta-data in the password store. Someone with
+      pass, by default, exposes meta-data in the password store. Someone with
       access to your computer might find
 
       ~/.password-store/email/google/johndoe@gmail.com
