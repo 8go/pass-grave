@@ -19,78 +19,81 @@
 VERSION="1.1.1"
 PASSWORD_STORE_GRAVE_DEBUG=false                    # true or false, prints debugging messages
 PASSWORD_STORE_GRAVE_DIR=".grave"                   # default directory is $PASSWORD_STORE_GRAVE_DIR; $PREFIX/$PASSWORD_STORE_GRAVE_DIR
-PASSWORD_STORE_GRAVE_BASENAME="passwordstore.grave" # grave will become passwordstore.grave.tar.gz2.gpg
+PASSWORD_STORE_GRAVE_BASENAME="passwordstore.grave" # grave will become passwordstore.grave.tar.gz.gpg
 TAR=$(command -v tar)
 
 cmd_grave_usage() {
   cat <<-_EOF
-Why a "grave"?
-      pass by default shows meta-data in the password store. Someone with access
-      to your computer might find ~/.password-store/email/google/johndoe@gmail.com
+Why should I use pass-grave?
+      pass, by default, shows meta-data in the password store. Someone with
+      access to your computer might find
+
+      ~/.password-store/email/google/johndoe@gmail.com
+
       and conclude you have an account with Google and the account name is
-      "johndoe@gmail.com". The same for your banking information, etc.
+      "johndoe@gmail.com". The same goes for other sensitive information like
+      your bank details.
 
       The idea for pass-grave comes from
+
       pass-tomb: https://github.com/roddhjav/pass-tomb#readme
-      In order to hide this meta-data you can use pass-tomb to place the
-      password store into a tomb (https://www.dyne.org/software/tomb/).
-      The same you can do with this, pass-grave.
+      tomb:      https://www.dyne.org/software/tomb/
 
-      A "grave" is similar to a tomb but a lot lighter and simpler.
-      With "pass grave close" you place the complete passwordstore
-      into the grave, and close the grave, reducing everything to a single
-      file without any meta-data.
-
-      With "pass grave open" you open the grave, take all the information
-      out of the grave and restore the complete passwordstore to its former
-      state.
-
-      So, typically the first operation of a pass session is to open the grave
-      and the very step is to close the grave.
+      pass-tomb hides meta-data by placing your password store into an
+      encrypted "tomb", which uses cryptsetup and LUKS under the hood.
+      pass-grave is similar to pass-tomb but it relies on gpg to place your
+      password store in an encrypted "grave". Since pass also uses gpg, this
+      makes pass-grave much more simple and lighter than pass-tomb.
 
 Usage:
-    $PROGRAM grave open
-        On the first run it creates a directory ".grave" in \$PREFIX.
-        By default this is ~/.password-store/.grave".
-        If the grave directory with a grave exists it will open it and
-        restore the full password store. Once restored the grave will be removed.
-        The grave is represented with the file
-        ~/.password-store/.grave/passwordstore.grave.tar.gz2.gpg.
-        The grave is encrypted with the pass GPG key and hence
-        the content of the grave and all its meta-data is protected and
-        hidden.
-    $PROGRAM grave close
-        If the grave does not exist, "close" creates a copy of the complete password
-        store by creating a compressed tar-file with extension .tar.bz2 and
-        encrypts it with the pass GPG key.
-        Thereafter the password store is removed leaving only the grave file
-        and other files that hold no meta-data (e.g. extensions, backups, gpg-id).
-    $PROGRAM grave help
-        Prints this help message.
-    $PROGRAM grave version
-        Prints the version number.
+      The first step after installing pass-grave should be to execute the
+      following command
 
-Example: $PROGRAM grave open
-            this opens the grave at the beginning of a session
-            and restores the password store from the grave file and then
-            removes the grave file.
-Example: $PROGRAM grave close
-            this creates a copy of the password store and places it into
-            a single compressed and encrypted file. Thereafter it removes
-            the password store (except some files holding no meta-data)
+      $ pass grave close
 
-For installation place this bash script file "grave.bash" into
-the passwordstore extension directory specified with \$PASSWORD_STORE_EXTENSIONS_DIR.
-By default this is ~/.password-store/.extensions.
-E.g. cp grave.bash ~/.password-store/.extensions
-Give the file execution permissions:
-E.g. chmod 700 ~/.password-store/.extensions/grave.bash
-Set the variable PASSWORD_STORE_ENABLE_EXTENSIONS to true to enable extensions.
-E.g. export PASSWORD_STORE_ENABLE_EXTENSIONS=true
-Source the bash completion file "pass-grave.bash.completion" for bash completion.
-E.g. source ~/.password-store/.bash-completions/pass-grave.bash.completion
-Type "pass grave close" to create your first grave.
-E.g. pass grave close
+      This will create a '.grave' folder inside your password store directory
+      and create an encrypted file called 'passwordstore.grave.tar.gz.gpg'.
+      This file actually contains all of your password store data in its
+      original form. The location of the file will be
+
+      $PREFIX/.grave/passwordstore.grave.tar.gz.gpg
+
+      To restore your password store data from the encrypted "grave", execute
+      
+      $ pass grave open
+
+      To see this help message, execute
+
+      $ pass grave help
+
+      To check the version of pass-grave, execute
+
+      $ pass grave version
+
+Install:
+      To install pass-grave, place the 'grave.bash' file in the password store
+      extensions directory located at
+
+      $EXTENSIONS
+
+      and make it executable. This can be done using
+
+      $ cp grave.bash $EXTENSIONS
+      $ chmod 700 $EXTENSIONS/grave.bash
+
+      Optionally, if you want bash-completion for pass-grave, install the
+      'pass-grave.bash.completion' file in an appropriate location
+      
+      $ cp pass-grave.bash.completion ~/.local/share/bash-completion/completions/pass-grave
+
+      Finally, to enable extension support in pass, set the environment
+      variable PASSWORD_STORE_ENABLE_EXTENSIONS to true and export it
+
+      $ export PASSWORD_STORE_ENABLE_EXTENSIONS=true
+
+      Add this command to ~/.bash_profile or ~/.profile (depending on your
+      installation) to activate this environment variable permanently. You may
+      need to re-login for these changes to take effect.
 _EOF
   exit 0
 }
