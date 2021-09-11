@@ -27,6 +27,15 @@ pass-tomb.
 
 ## Usage
 
+Before you start using `pass-grave`, we **highly** recommended using `git` to ensure the data
+integrity of your password store. You can also setup a bare git repository in a different location
+on the same device or on a different device and use that as a remote repository to keep a backup of
+your password store. A password store can be initialized as a git repository using
+
+```
+$ pass git init
+```
+
 The first step after installing pass-grave should be to execute the following command
 
 ```
