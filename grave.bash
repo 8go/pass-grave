@@ -23,7 +23,7 @@ PASSWORD_STORE_GRAVE_BASENAME="passwordstore.grave" # grave will become password
 TAR=$(command -v tar)
 
 cmd_grave_usage() {
-  cat <<-_EOF
+  cat <<- _EOF
 Why should I use pass-grave?
       pass, by default, shows meta-data in the password store. Someone with
       access to your computer might find
@@ -109,7 +109,7 @@ cmd_grave_open() {
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave file to $PASSWORD_STORE_GRAVE_PATH"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PREFIX"
 
-  pushd "$PREFIX" >/dev/null || die "Could not cd into directory $PREFIX. Aborting."
+  pushd "$PREFIX" > /dev/null || die "Could not cd into directory $PREFIX. Aborting."
 
   # does the grave already exist?
   [[ ! -f "$PASSWORD_STORE_GRAVE_PATH" ]] && {
@@ -120,13 +120,13 @@ cmd_grave_open() {
   }
 
   # file does exist
-  mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" >/dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
+  mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" > /dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
   $PASSWORD_STORE_GRAVE_DEBUG && echo $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" \| tar xz
   $GPG -d "${GPG_OPTS[@]}" "$PASSWORD_STORE_GRAVE_PATH" | tar xz || die "Could not decrypt or untar grave $PASSWORD_STORE_GRAVE_PATH. Aborting."
   rm -f "$PASSWORD_STORE_GRAVE_PATH" || die "Could not remove grave $PASSWORD_STORE_GRAVE_PATH. Please remove manually. Aborting."
   echo "Recreated password store from grave file \"${PASSWORD_STORE_GRAVE_PATH}\" successfully."
   echo "You can now operate on your password store normally. Use \"grave close\" at the end of session to hide meta-data."
-  popd >/dev/null || die "Could not change directory. Aborting."
+  popd > /dev/null || die "Could not change directory. Aborting."
 }
 
 cmd_grave_close() {
@@ -135,7 +135,7 @@ cmd_grave_close() {
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Setting grave file to $PASSWORD_STORE_GRAVE_PATH"
   $PASSWORD_STORE_GRAVE_DEBUG && echo "Password storage directory is $PREFIX"
 
-  pushd "$PREFIX" >/dev/null || die "Could not cd into directory $PREFIX. Aborting."
+  pushd "$PREFIX" > /dev/null || die "Could not cd into directory $PREFIX. Aborting."
 
   # does the grave already exist?
   [[ -f "$PASSWORD_STORE_GRAVE_PATH" ]] && {
@@ -147,15 +147,15 @@ cmd_grave_close() {
     die "Aborting."
   }
 
-  mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" >/dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
+  mkdir -p "${PASSWORD_STORE_GRAVE_DIR}" > /dev/null || die "Could not create directory $PASSWORD_STORE_GRAVE_DIR. Aborting."
   set_gpg_recipients "$(dirname "$PREFIX")"
   $PASSWORD_STORE_GRAVE_DEBUG && echo tar --exclude ".gpg-id" --exclude=".extensions" --exclude=".backups" -cz . \| $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}"
   tar --exclude ".gpg-id" --exclude=".grave" --exclude=".extensions" --exclude=".backups" -cz . | $GPG -e "${GPG_RECIPIENT_ARGS[@]}" -o "$PASSWORD_STORE_GRAVE_PATH" "${GPG_OPTS[@]}" || die "Creating encrypted grave failed. Aborting." # add v for debugging if need be
-  chmod 400 "${PASSWORD_STORE_GRAVE_PATH}" >/dev/null || die "Could not change permissions to read-only on file $PASSWORD_STORE_GRAVE_PATH. Aborting."
-  GZSIZE=$(wc -c <"${PASSWORD_STORE_GRAVE_PATH}") # returns size in bytes
+  chmod 400 "${PASSWORD_STORE_GRAVE_PATH}" > /dev/null || die "Could not change permissions to read-only on file $PASSWORD_STORE_GRAVE_PATH. Aborting."
+  GZSIZE=$(wc -c < "${PASSWORD_STORE_GRAVE_PATH}") # returns size in bytes
   echo "Created grave file \"${PASSWORD_STORE_GRAVE_PATH}\" of size ${GZSIZE} bytes."
   find . ! -name '.gpg-id' ! -name '.' ! -name '..' ! -path './.grave' ! -path './.grave/*' ! -path './.extensions' ! -path './.extensions/*' ! -path './.backups' ! -path './.backups/*' -delete || die "Removing password store after having created grave failed. Aborting."
-  popd >/dev/null || die "Could not change directory. Aborting."
+  popd > /dev/null || die "Could not change directory. Aborting."
 }
 
 cmd_grave_openclose() {
@@ -173,14 +173,14 @@ cmd_grave_openclose() {
 }
 
 case "$1" in
-help | --help | -h)
-  shift
-  cmd_grave_usage "$@"
-  ;;
-version | --version | -v)
-  shift
-  cmd_grave_version "$@"
-  ;;
-*) cmd_grave_openclose "$@" ;;
+  help | --help | -h)
+    shift
+    cmd_grave_usage "$@"
+    ;;
+  version | --version | -v)
+    shift
+    cmd_grave_version "$@"
+    ;;
+  *) cmd_grave_openclose "$@" ;;
 esac
 exit 0
